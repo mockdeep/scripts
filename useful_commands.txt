@@ -1,0 +1,3 @@
+# remove all files containing the word 'conflict in their titles
+# case insensitive, confirm each deletion
+find . -iname *conflict* -print0 | xargs -0p rm

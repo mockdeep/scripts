@@ -1,0 +1,1 @@
+[--servertype=IMAP --servername=imap.gmail.com --ssl --username=USERNAME --password=PASSWORD --mailinfo=3]
