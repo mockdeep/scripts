@@ -13,7 +13,7 @@ echo "----------------------------------"
 sudo apt-get install -y vlc flashplugin-nonfree mplayer gstreamer0.10-ffmpeg gstreamer0.10-fluendo-mp3 gstreamer0.10-plugins-ugly gstreamer0.10-plugins-bad
 echo "installing tools, etc."
 echo "----------------------------------"
-sudo apt-get install -y gnome-do gimp conky chromium-browser compizconfig-settings-manager compiz-fusion-plugins-extra comix xsane wmctrl iotop
+sudo apt-get install -y gnome-do gimp conky chromium-browser compizconfig-settings-manager compiz-fusion-plugins-extra comix xsane wmctrl iotop unrar
 
 if !  dpkg -l nautilus-dropbox > /dev/null; then
     echo 'dropbox not installed...'
