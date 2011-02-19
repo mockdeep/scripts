@@ -8,19 +8,26 @@ sudo apt-get dist-upgrade
 #sudo gem update
 echo "setting up editors/ides/build tools:"
 echo "----------------------------------"
-sudo apt-get install -y vim eclipse build-essential ruby ri rdoc python git curl mysql-server-5.0 zlib1g-dev coreutils libtool bison libxt-dev openvpn tunneldigger ruby1.8-dev sqlite3 libsqlite3-dev libxml2-dev libmagickwand-devlibmysqlclient-dev libmemcached-dbg
+sudo apt-get install -y vim eclipse build-essential ruby ri rdoc python \
+git curl mysql-server-5.0 zlib1g-dev coreutils libtool bison libxt-dev \
+openvpn tunneldigger ruby1.8-dev sqlite3 libsqlite3-dev libxml2-dev \
+libmagickwand-dev libmysqlclient-dev libmemcached-dbg
 echo "setting up media players:"
 echo "----------------------------------"
-sudo apt-get install -y vlc flashplugin-nonfree mplayer gstreamer0.10-ffmpeg gstreamer0.10-fluendo-mp3 gstreamer0.10-plugins-ugly gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly-multiverse
+sudo apt-get install -y vlc flashplugin-nonfree mplayer \
+gstreamer0.10-ffmpeg gstreamer0.10-fluendo-mp3 gstreamer0.10-plugins-ugly \
+gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly-multiverse
 echo "installing tools, etc."
 echo "----------------------------------"
-sudo apt-get install -y gnome-do gimp conky chromium-browser compizconfig-settings-manager compiz-fusion-plugins-extra comix xsane wmctrl iotop unrar conkygooglecalendar conkyrhythmbox
+sudo apt-get install -y gnome-do gimp conky chromium-browser \
+compizconfig-settings-manager compiz-fusion-plugins-extra comix xsane \
+wmctrl iotop unrar conkygooglecalendar conkyrhythmbox tree
 
 if !  dpkg -l nautilus-dropbox > /dev/null; then
     echo 'dropbox not installed...'
-    #wget http://linux.dropbox.com/packages/nautilus-dropbox_0.6.3_i386.deb
-    #sudo dpkg -i nautilus-dropbox_0.6.3_i386.deb
-    #rm nautilus-dropbox_0.6.3_i386.deb
+    wget http://linux.dropbox.com/packages/nautilus-dropbox_0.6.3_i386.deb
+    sudo dpkg -i nautilus-dropbox_0.6.3_i386.deb
+    rm nautilus-dropbox_0.6.3_i386.deb
 fi
 
 if ! gem -v > /dev/null; then
@@ -38,21 +45,3 @@ if ! gem -v > /dev/null; then
     sudo ln -s /usr/bin/ri1.8 /usr/local/bin/ri
     sudo ln -s /usr/bin/irb1.8 /usr/local/bin/irb
 fi
-#wget http://linux.dropbox.com/packages/nautilus-dropbox_0.6.3_i386.deb
-#sudo dpkg -i nautilus-dropbox_0.6.3_i386.deb
-# nautilus-dropbox
-# download rubygems from web
-# change gnome-do settings
-# turn off sleep, screensaver
-# create hotkey to lock computer
-# install rails, rspec, rspec-rails, rvm, cucumber
-# install firefox plugins
-# install dropbox
-# add medibuntu repositories
-# install libdvdcss
-# install adobe reader, skype
-# install NerdTree, buffer explorer
-# install android plugin in eclipse, configure path
-# set up .bashrc, conkyrc
-# set up flaming windows, desktop cube, window snap hot keys
-# install Greasemonkey scripts: ffixer, Google MonkeyR, embedifier, gmail favicon alerts, Open all unread button
