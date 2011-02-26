@@ -1,0 +1,11 @@
+
+[Desktop Entry]
+Type=Application
+Exec=/home/fletch/Dropbox/scripts/conky_start.sh
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name[en_US]=Conky
+Name=Conky
+Comment[en_US]=Start up 3 instances of conky
+Comment=Start up 3 instances of conky
