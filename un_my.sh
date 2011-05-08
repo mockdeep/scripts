@@ -7,3 +7,4 @@ sudo rm -rf /Library/PreferencePanes/My*
 sudo rm -rf /Library/Receipts/mysql*
 sudo rm -rf /Library/Receipts/MySQL*
 sudo rm /etc/my.cnf
+sudo rm /private/var/db/receipts/*mysql*
