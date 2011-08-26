@@ -19,7 +19,6 @@ ln -s ~/Dropbox/dotfiles/conkyrc2 ~/.conkyrc2
 ln -s ~/Dropbox/dotfiles/conkyrc3 ~/.conkyrc3
 ln -s ~/Dropbox/dotfiles/gitconfig ~/.gitconfig
 ln -s ~/Dropbox/dotfiles/vimrc ~/.vimrc
-ln -s ~/Dropbox/dotfiles/gitconfig ~/.gitconfig
 ln -s ~/Dropbox/dotfiles/gtk-bookmarks ~/.gtk-bookmarks
 ln -s ~/Dropbox/dotfiles/irbrc ~/.irbrc
 ln -s ~/Dropbox/dotfiles/irb-save-history ~/.irb-save-history
