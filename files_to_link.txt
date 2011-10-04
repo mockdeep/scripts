@@ -1,0 +1,17 @@
+bars.yml
+.conkyrc
+.conkyrc2
+.conkyrc3
+.credentials
+.gitconfig
+.irbrc
+.irb-save-history
+.jslintrc
+rudo.yml
+.ssh
+.tapjoy_aws_credentials.sh
+.tapjoy_aws_credentials.yaml
+.vim
+.vimrc
+Templates/Document.odt
+Templates/Spreadsheet.odt
