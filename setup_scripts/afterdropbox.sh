@@ -37,4 +37,4 @@ if [[ $unamestr == 'Linux' ]]; then
   ln -s ~/Dropbox/Templates/Spreadsheet.ods ~/Templates/Spreadsheet.ods
 fi
 
-cp ~/Dropbox/conky_start.sh.desktop ~/.config/autostart/
+cp ~/Dropbox/scripts/conky_start.sh.desktop ~/.config/autostart/
