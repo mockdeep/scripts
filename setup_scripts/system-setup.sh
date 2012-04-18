@@ -30,6 +30,6 @@ gstreamer0.10-ffmpeg gstreamer0.10-fluendo-mp3 gstreamer0.10-plugins-ugly \
 gstreamer0.10-plugins-bad
 echo "installing tools, etc."
 echo "----------------------------------"
-sudo apt-get install -y gnome-do gimp conky chromium-browser \
+sudo apt-get install -y kupfer gimp conky chromium-browser \
 comix xsane \
 wmctrl iotop unrar conkygooglecalendar conkyrhythmbox tree
