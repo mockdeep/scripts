@@ -5,6 +5,7 @@ puts branch
 
 puts `git checkout #{branch}`
 puts `git merge master`
+puts `git push origin #{branch}`
 diff = `git diff master`
 if diff == ''
   puts "*" * 80
