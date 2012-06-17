@@ -25,11 +25,11 @@ sudo -u postgres createuser elements
 
 echo "setting up media players:"
 echo "----------------------------------"
-sudo apt-get install -y vlc adobe-flashplugin \
+sudo apt-get install -y vlc \
 gstreamer0.10-ffmpeg gstreamer0.10-fluendo-mp3 gstreamer0.10-plugins-ugly \
 gstreamer0.10-plugins-bad
 echo "installing tools, etc."
 echo "----------------------------------"
 sudo apt-get install -y kupfer gimp conky chromium-browser \
-comix xsane \
+comix xsane deluge \
 wmctrl iotop unrar conkygooglecalendar conkyrhythmbox tree
