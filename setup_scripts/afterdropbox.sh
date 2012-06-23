@@ -1,3 +1,4 @@
+set -e
 #!/bin/bash
 # this should be run after dropbox has been installed using
 # system-setup.sh.  It's then necessary to sync the dotfiles
@@ -14,25 +15,27 @@ if ! grep Dropbox $bashfile; then
   echo '. ~/Dropbox/dotfiles/bashrc' >> $bashfile
 fi
 
-ln -s ~/Dropbox/dotfiles/conkyrc ~/.conkyrc
-ln -s ~/Dropbox/dotfiles/conkyrc2 ~/.conkyrc2
-ln -s ~/Dropbox/dotfiles/conkyrc3 ~/.conkyrc3
-ln -s ~/Dropbox/dotfiles/gemrc ~/.gemrc
-ln -s ~/Dropbox/dotfiles/gitconfig ~/.gitconfig
-ln -s ~/Dropbox/dotfiles/gitignore_global ~/.gitignore_global
-ln -s ~/Dropbox/dotfiles/vimrc ~/.vimrc
-ln -s ~/Dropbox/dotfiles/gtk-bookmarks ~/.gtk-bookmarks
-ln -s ~/Dropbox/dotfiles/irbrc ~/.irbrc
-ln -s ~/Dropbox/dotfiles/irb-save-history ~/.irb-save-history
-ln -s ~/Dropbox/dotfiles/jslintrc ~/.jslintrc
+ln -sf ~/Dropbox/dotfiles/conkyrc ~/.conkyrc
+ln -sf ~/Dropbox/dotfiles/conkyrc2 ~/.conkyrc2
+ln -sf ~/Dropbox/dotfiles/conkyrc3 ~/.conkyrc3
+ln -sf ~/Dropbox/dotfiles/gemrc ~/.gemrc
+ln -sf ~/Dropbox/dotfiles/gitconfig ~/.gitconfig
+ln -sf ~/Dropbox/dotfiles/gitignore_global ~/.gitignore_global
+ln -sf ~/Dropbox/dotfiles/vimrc ~/.vimrc
+ln -sf ~/Dropbox/dotfiles/gtk-bookmarks ~/.gtk-bookmarks
+ln -sf ~/Dropbox/dotfiles/irbrc ~/.irbrc
+ln -sf ~/Dropbox/dotfiles/irb-save-history ~/.irb-save-history
+ln -sf ~/Dropbox/dotfiles/jslintrc ~/.jslintrc
 
-ln -s ~/Dropbox/dotfiles/ssh ~/.ssh
-ln -s ~/Dropbox/dotfiles/vim ~/.vim
+ln -sf ~/Dropbox/dotfiles/.ssh ~/
+ln -sf ~/Dropbox/dotfiles/.vim ~/
+#ln -sf ~/Dropbox/dotfiles/deluge ~/.config/
+ln -sf ~/Dropbox/dotfiles/banshee-1 ~/.config/
 
-ln -s ~/Dropbox/Documents/bars.yml ~/bars.yml
-ln -s ~/Dropbox/Documents/rudo.yml ~/rudo.yml
+ln -sf ~/Dropbox/Documents/bars.yml ~/bars.yml
+ln -sf ~/Dropbox/Documents/rudo.yml ~/rudo.yml
 
 if [[ $unamestr == 'Linux' ]]; then
-  ln -s ~/Dropbox/Templates/Document.odt ~/Templates/Document.odt
-  ln -s ~/Dropbox/Templates/Spreadsheet.ods ~/Templates/Spreadsheet.ods
+  ln -sf ~/Dropbox/Templates/Document.odt ~/Templates/Document.odt
+  ln -sf ~/Dropbox/Templates/Spreadsheet.ods ~/Templates/Spreadsheet.ods
 fi
