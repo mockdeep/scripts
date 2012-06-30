@@ -8,9 +8,10 @@ echo "setting up editors/ides/build tools:"
 echo "----------------------------------"
 sudo apt-get install -y vim eclipse git \
 curl mysql-server zlib1g-dev coreutils libtool bison libxt-dev \
-sqlite3 libsqlite3-dev libxml2-dev \
+sqlite3 libsqlite3-dev libxml2-dev libreadline-dev \
 libmagickwand-dev libmysqlclient-dev libmemcached-dbg \
-postgresql postgresql-client libpq-dev libxslt1-dev nodejs
+postgresql postgresql-client libpq-dev libxslt1-dev nodejs \
+libqt4-dev libqtwebkit-dev
 #sudo -u postgres createuser elements
 
 # update the end of /etc/postgresql/9.1/main/pg_hba.conf to look like this:
@@ -39,9 +40,3 @@ curl -L get.rvm.io | bash -s stable
 source ~/.bashrc
 rvm install 1.9.3
 gem install rudo
-#echo "installing dropbox"
-#echo "----------------------------------"
-#wget -O dropbox.deb https://www.dropbox.com/download?dl=packages/ubuntu/dropbox_1.4.0_amd64.deb
-#sudo dpkg -i dropbox.deb
-#dropbox -i
-#dropbox start
