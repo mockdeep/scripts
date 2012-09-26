@@ -31,6 +31,7 @@ ln -sf ~/Dropbox/dotfiles/.ssh ~/
 ln -sf ~/Dropbox/dotfiles/.vim ~/
 #ln -sf ~/Dropbox/dotfiles/deluge ~/.config/
 ln -sf ~/Dropbox/dotfiles/banshee-1 ~/.config/
+ln -sf ~/Dropbox/dotfiles/gconf.xml ~/.gconf/apps/gnome-terminal/profiles/Default/%gconf.xml
 
 ln -sf ~/Dropbox/Documents/bars.yml ~/bars.yml
 ln -sf ~/Dropbox/Documents/rudo.yml ~/rudo.yml
