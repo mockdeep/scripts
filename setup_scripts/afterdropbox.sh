@@ -26,6 +26,7 @@ ln -sf ~/Dropbox/dotfiles/gtk-bookmarks ~/.gtk-bookmarks
 ln -sf ~/Dropbox/dotfiles/irbrc ~/.irbrc
 ln -sf ~/Dropbox/dotfiles/irb-save-history ~/.irb-save-history
 ln -sf ~/Dropbox/dotfiles/jslintrc ~/.jslintrc
+ln -sf ~/Dropbox/dotfiles/railsrc ~/.railsrc
 
 ln -sf ~/Dropbox/dotfiles/.ssh ~/
 ln -sf ~/Dropbox/dotfiles/.vim ~/
