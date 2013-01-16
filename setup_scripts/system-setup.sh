@@ -35,5 +35,6 @@ wmctrl iotop unrar tree
 echo "installing rvm"
 echo "----------------------------------"
 curl -L get.rvm.io | bash -s stable
+wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh
 source ~/.bashrc
 rvm install 1.9.3
