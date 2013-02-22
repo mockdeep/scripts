@@ -9,8 +9,8 @@ sudo apt-get install -y vim eclipse git \
 curl mysql-server zlib1g-dev coreutils libtool bison libxt-dev \
 sqlite3 libsqlite3-dev libxml2-dev libreadline-dev \
 libmagickwand-dev libmysqlclient-dev libmemcached-dbg \
-postgresql postgresql-client libpq-dev libxslt1-dev nodejs \
-libqt4-dev libqtwebkit-dev libsasl2-dev libcurl4-gnutls-dev \
+postgresql postgresql-client postgresql-contrib libpq-dev libxslt1-dev \
+nodejs libqt4-dev libqtwebkit-dev libsasl2-dev libcurl4-gnutls-dev \
 memcached build-essential imagemagick
 # update the end of /etc/postgresql/9.1/main/pg_hba.conf to look like this:
 # # TYPE  DATABASE    USER        CIDR-ADDRESS          METHOD
@@ -32,9 +32,9 @@ echo "----------------------------------"
 sudo apt-get install -y kupfer gimp chromium-browser \
 comix xsane deluge \
 wmctrl iotop unrar tree
-echo "installing rvm"
-echo "----------------------------------"
-curl -L get.rvm.io | bash -s stable
-wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh
-source ~/.bashrc
-rvm install 1.9.3
+#echo "installing rvm"
+#echo "----------------------------------"
+#curl -L get.rvm.io | bash -s stable
+#wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh
+#source ~/.bashrc
+#rvm install 1.9.3
