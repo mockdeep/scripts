@@ -45,7 +45,7 @@ end
 branch = ARGV[0]
 puts branch
 
-differ = Differ.new(branch, 'rebase')
+differ = Differ.new(branch, 'merge')
 
 if differ.same?('master') || differ.same?('staging')
   puts "*" * 80
