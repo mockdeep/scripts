@@ -1,0 +1,2 @@
+# to be used with extreme caution and trepidation
+git filter-branch --index-filter 'git rm --cached --ignore-unmatch db/pgdump.sql' --prune-empty --tag-name-filter cat -- --all
