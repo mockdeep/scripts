@@ -16,7 +16,7 @@ File.readlines('./asana.txt').each do |line|
   line = line.chomp
   if line.start_with?('[Project]')
     project_name = line.split[1..-1].join(' ')
-    lists[project_name] = []
+    lists[project_name] ||= []
   else
     raise 'no project name!' unless project_name
     lists[project_name] << line
