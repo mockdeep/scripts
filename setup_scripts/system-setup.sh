@@ -1,8 +1,11 @@
 set -e
+curl -sL https://deb.nodesource.com/setup | sudo bash -
+
 echo "first we'll update what we've got:"
 echo "----------------------------------"
 sudo apt-get -y update && sudo apt-get upgrade
 sudo apt-get dist-upgrade
+
 echo "setting up editors/ides/build tools:"
 echo "----------------------------------"
 sudo apt-get install -y vim eclipse git \
@@ -11,7 +14,7 @@ sqlite3 libsqlite3-dev libxml2-dev libreadline-dev \
 libmagickwand-dev libmysqlclient-dev libmemcached-dbg \
 postgresql postgresql-client postgresql-contrib libpq-dev libxslt1-dev \
 nodejs libqt4-dev libqtwebkit-dev libsasl2-dev libcurl4-gnutls-dev \
-memcached build-essential imagemagick
+memcached build-essential imagemagick redis-server phantomjs nodejs
 # update the end of /etc/postgresql/9.1/main/pg_hba.conf to look like this:
 # # TYPE  DATABASE    USER        CIDR-ADDRESS          METHOD
 # # "local" is for Unix domain socket connections only
@@ -30,7 +33,7 @@ gstreamer0.10-plugins-bad
 echo "installing tools, etc."
 echo "----------------------------------"
 sudo apt-get install -y kupfer gimp chromium-browser \
-comix xsane deluge \
+comix xsane dropbox nemo-dropbox \
 wmctrl iotop unrar tree
 #echo "installing rvm"
 #echo "----------------------------------"
