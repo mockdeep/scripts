@@ -36,6 +36,8 @@ echo "----------------------------------"
 sudo apt-get install -y kupfer gimp chromium-browser \
 comix xsane dropbox nemo-dropbox \
 wmctrl iotop unrar tree
+
+dropbox start -i
 #echo "installing rvm"
 #echo "----------------------------------"
 #curl -L get.rvm.io | bash -s stable
