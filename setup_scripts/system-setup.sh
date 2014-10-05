@@ -1,4 +1,5 @@
 set -e
+sudo apt-get install -y curl
 curl -sL https://deb.nodesource.com/setup | sudo bash -
 
 echo "first we'll update what we've got:"
@@ -9,7 +10,7 @@ sudo apt-get dist-upgrade
 echo "setting up editors/ides/build tools:"
 echo "----------------------------------"
 sudo apt-get install -y vim eclipse git \
-curl mysql-server zlib1g-dev coreutils libtool bison libxt-dev \
+mysql-server zlib1g-dev coreutils libtool bison libxt-dev \
 sqlite3 libsqlite3-dev libxml2-dev libreadline-dev \
 libmagickwand-dev libmysqlclient-dev libmemcached-dbg \
 postgresql postgresql-client postgresql-contrib libpq-dev libxslt1-dev \
