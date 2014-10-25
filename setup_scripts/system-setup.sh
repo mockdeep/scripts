@@ -34,7 +34,7 @@ gstreamer0.10-plugins-bad
 echo "installing tools, etc."
 echo "----------------------------------"
 sudo apt-get install -y kupfer gimp chromium-browser \
-comix xsane dropbox nemo-dropbox \
+comix xsane dropbox nemo-dropbox soundconverter \
 wmctrl iotop unrar tree
 
 dropbox start -i
