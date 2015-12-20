@@ -15,7 +15,8 @@ sqlite3 libsqlite3-dev libxml2-dev libreadline-dev \
 libmagickwand-dev libmysqlclient-dev libmemcached-dbg \
 postgresql postgresql-client postgresql-contrib libpq-dev libxslt1-dev \
 libqt4-dev libqtwebkit-dev libsasl2-dev libcurl4-gnutls-dev \
-memcached build-essential imagemagick redis-server phantomjs nodejs
+memcached build-essential imagemagick redis-server phantomjs nodejs \
+virtualbox virtualbox-dkms linux-headers-generic vagrant
 # update the end of /etc/postgresql/9.1/main/pg_hba.conf to look like this:
 # # TYPE  DATABASE    USER        CIDR-ADDRESS          METHOD
 # # "local" is for Unix domain socket connections only
@@ -35,7 +36,7 @@ echo "installing tools, etc."
 echo "----------------------------------"
 sudo apt-get install -y kupfer gimp chromium-browser \
 comix xsane dropbox nemo-dropbox soundconverter \
-wmctrl iotop unrar tree
+wmctrl iotop unrar tree redshift-gtk
 
 dropbox start -i
 #echo "installing rvm"
