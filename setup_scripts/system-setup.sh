@@ -34,11 +34,11 @@ virtualbox virtualbox-dkms linux-headers-generic vagrant yarn
 # host    all         all         ::1/128               trust
 # then run `sudo /etc/init.d/postgresql restart`
 
-echo "installing tools, etc."
+echo "installing tools, media players, etc."
 echo "----------------------------------"
 sudo apt-get install -y kupfer gimp chromium-browser \
 comix xsane dropbox nemo-dropbox soundconverter \
-wmctrl iotop unrar tree redshift-gtk jq vlc \
+wmctrl iotop unrar tree redshift-gtk jq vlc banshee\
 libgtop2-dev libgtop-2.0-10 libgtop2-common
 
 echo "setting up NVM"
