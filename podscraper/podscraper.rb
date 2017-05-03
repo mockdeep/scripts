@@ -13,9 +13,8 @@ class PodScraper
     { selector: 'audio > source', attribute: 'src' },
     { selector: '.sqs-audio-embed', attribute: 'data-url' },
   ]
-  THROTTLE_TIME = 1
-  # FILE_LINK_SELECTOR = 'audio > source' # 'a[title="Download"]'
-  # FILE_LINK_ATTRIBUTE = 'src' # 'href'
+  THROTTLE_TIME = 5
+  DRY_RUN = true
 
   def initialize
     self.mech = Mechanize.new
@@ -47,10 +46,10 @@ private
   def download_from_page(page)
     mp3_link = locate_mp3(page)
     puts "downloading: #{mp3_link}"
+
+    return if DRY_RUN
+
     mech.get(mp3_link).save(File.join(OUTPUT_FOLDER, File.basename(mp3_link)))
-    # raise "all downloaded!"
-    # get mp3 link
-    # download mp3 link
   end
 
   def locate_mp3(page)
