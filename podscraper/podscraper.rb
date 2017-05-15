@@ -22,7 +22,7 @@ class PodScraper
   end
 
   def call
-    page = mech.get(SOURCE_LINK)
+    page = request(SOURCE_LINK)
 
     # file_links = aggregate_file_links
 
@@ -30,18 +30,25 @@ class PodScraper
     #   download_link(file_link, index)
     # end
 
-    sleep(THROTTLE_TIME)
     download_links(page)
 
-    sleep(THROTTLE_TIME)
     while link = next_link(page)
       puts "link: #{link}"
-      page = mech.get(link)
+      page = request(link)
       download_links(page)
     end
   end
 
 private
+
+  def request(link)
+    sleep(THROTTLE_TIME)
+    mech.get(link)
+  rescue Net::HTTPTooManyRequests
+    puts 'too many requests, retrying'
+    sleep(THROTTLE_TIME * 2)
+    retry
+  end
 
   def download_from_page(page)
     mp3_link = locate_mp3(page)
@@ -49,7 +56,7 @@ private
 
     return if DRY_RUN
 
-    mech.get(mp3_link).save(File.join(OUTPUT_FOLDER, File.basename(mp3_link)))
+    request(mp3_link).save(File.join(OUTPUT_FOLDER, File.basename(mp3_link)))
   end
 
   def locate_mp3(page)
@@ -62,7 +69,7 @@ private
   def download_links(page)
     page.search(ARTICLE_LINK_SELECTOR).each do |link|
       sleep(THROTTLE_TIME)
-      download_from_page(mech.get(page.uri.merge(link['href'])))
+      download_from_page(request(page.uri.merge(link['href'])))
     end
   end
 
