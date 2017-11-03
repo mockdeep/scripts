@@ -1,0 +1,108 @@
+#!/usr/bin/env ruby
+
+require 'English'
+
+SKIP_BRANCHES = %w[staging master]
+
+class Branch
+
+  attr_accessor :name
+  attr_accessor :children
+
+  def initialize(name)
+    @name = name
+    @children = []
+  end
+
+  def rebase(other_branch)
+    print `git checkout #{name}`
+    print `git rebase #{other_branch.name}`
+    skip_through if !$CHILD_STATUS.success?
+  end
+
+  def skip_through
+    print "rebasing commit #{next_step} of #{last_step}, skip? (y/n)"
+    answer = gets.chomp
+    if answer == 'y'
+      print `git rebase --skip`
+      skip_through if !$CHILD_STATUS.success?
+    else
+      abort 'failed to rebase'
+    end
+  end
+
+  def next_step
+    File.read('./.git/rebase-apply/next').strip
+  end
+
+  def last_step
+    File.read('./.git/rebase-apply/last').strip
+  end
+
+  def inspect(indentation = '')
+    children_strings = children.map do |child|
+      "\n#{child.inspect(indentation + '  ')}"
+    end
+    "#{indentation}#{name}#{children_strings.join}"
+  end
+
+end
+
+class TreeBuilder
+  def initialize
+    @branch_cache = {}
+  end
+
+  def call(branches)
+    branches.each { |branch| link_branch_to_parent(branch, branches) }
+    find_branch(branches, 'master')
+  end
+
+  def link_branch_to_parent(branch, branches)
+    return if SKIP_BRANCHES.include?(branch.name)
+
+    master_branch = find_branch(branches, 'master')
+    parent_branch = find_branch(branches, parent_name(branch)) || master_branch
+
+    parent_branch.children << branch
+  end
+
+  def parent_name(branch)
+    _, name, number = branch.name.match(/([a-zA-Z_]*)(\d+)/).to_a
+
+    number ? "#{name}#{(number.to_i - 1).to_s.rjust(2, '0')}" : 'master'
+  end
+
+  def find_branch(branches, name)
+    @branch_cache[name] ||= branches.detect do |branch|
+      branch.name.end_with?(name)
+    end
+  end
+
+end
+
+class Rebaser
+  def call
+    master_branch = TreeBuilder.new.(branches)
+
+    if ARGV[0] == '--dry'
+      puts master_branch.inspect
+    else
+      rebase_children(master_branch)
+    end
+    print `git checkout master`
+  end
+
+  def branches
+    `git branch`.lines.map { |line| Branch.new(line.strip.tr('* ', '')) }
+  end
+
+  def rebase_children(branch)
+    branch.children.each do |child_branch|
+      child_branch.rebase(branch)
+      rebase_children(child_branch)
+    end
+  end
+end
+
+Rebaser.new.()
