@@ -17,15 +17,16 @@ class Branch
   def rebase(other_branch)
     print `git checkout #{name}`
     print `git rebase #{other_branch.name}`
-    skip_through if !$CHILD_STATUS.success?
+    skip_through(other_branch) if !$CHILD_STATUS.success?
   end
 
-  def skip_through
-    print "rebasing commit #{next_step} of #{last_step}, skip? (y/n)"
+  def skip_through(other_branch)
+    puts "conflict rebasing branch #{name} on #{other_branch.name}"
+    print "skip commit #{next_step} of #{last_step}? (y/n)"
     answer = gets.chomp
     if answer == 'y'
       print `git rebase --skip`
-      skip_through if !$CHILD_STATUS.success?
+      skip_through(other_branch) if !$CHILD_STATUS.success?
     else
       abort 'failed to rebase'
     end
