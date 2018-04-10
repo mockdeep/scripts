@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'English'
+require 'open3'
 
 SKIP_BRANCHES = %w[staging master]
 
@@ -16,8 +17,10 @@ class Branch
 
   def rebase(other_branch)
     print `git checkout #{name}`
-    print `git rebase #{other_branch.name}`
-    skip_through(other_branch) if !$CHILD_STATUS.success?
+    stdout, stderr, status = Open3.capture3("git rebase #{other_branch.name}")
+    puts stdout
+    puts stderr unless stderr.empty?
+    skip_through(other_branch) unless status.success?
   end
 
   def skip_through(other_branch)
