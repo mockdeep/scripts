@@ -6,6 +6,7 @@ set -e
 
 ln -sf ~/Dropbox/dotfiles/bashrc ~/.bashrc
 ln -sf ~/Dropbox/dotfiles/rspec ~/.rspec
+ln -sf ~/Dropbox/dotfiles/rvmrc ~/.rvmrc
 ln -sf ~/Dropbox/dotfiles/gemrc ~/.gemrc
 ln -sf ~/Dropbox/dotfiles/gitconfig ~/.gitconfig
 ln -sf ~/Dropbox/dotfiles/gitignore_global ~/.gitignore_global
@@ -19,11 +20,9 @@ ln -sf ~/Dropbox/dotfiles/railsrc ~/.railsrc
 ln -sf ~/Dropbox/dotfiles/.ssh ~/
 ln -sf ~/Dropbox/dotfiles/.vim ~/
 ln -sf ~/Dropbox/dotfiles/banshee-1 ~/.config/
-ln -sf ~/Dropbox/dotfiles/gconf.xml ~/.gconf/apps/gnome-terminal/profiles/Default/%gconf.xml
 
+ln -sf ~/Dropbox/list.txt ~/list.txt
 ln -sf ~/Dropbox/Documents/bars.yml ~/bars.yml
 ln -sf ~/Dropbox/Documents/rudo.yml ~/rudo.yml
 ln -sf ~/Dropbox/Templates/Document.odt ~/Templates/Document.odt
 ln -sf ~/Dropbox/Templates/Spreadsheet.ods ~/Templates/Spreadsheet.ods
-
-wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh
