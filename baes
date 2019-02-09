@@ -57,24 +57,28 @@ class TreeBuilder
     @branch_cache = {}
   end
 
-  def call(branches)
-    branches.each { |branch| link_branch_to_parent(branch, branches) }
-    find_branch(branches, 'master')
+  def call(branches, root_name:)
+    branches.each do |branch|
+      link_branch_to_parent(branch, branches, root_name: root_name)
+    end
+    find_branch(branches, root_name)
   end
 
-  def link_branch_to_parent(branch, branches)
-    return if SKIP_BRANCHES.include?(branch.name)
+  def link_branch_to_parent(branch, branches, root_name:)
+    return if (SKIP_BRANCHES + [root_name]).include?(branch.name)
 
-    root_branch = find_branch(branches, 'master')
-    parent_branch = find_branch(branches, parent_name(branch)) || root_branch
+    root_branch = find_branch(branches, root_name)
+    parent_branch =
+      find_branch(branches, parent_name(branch, root_name: root_name)) ||
+      root_branch
 
     parent_branch.children << branch
   end
 
-  def parent_name(branch)
+  def parent_name(branch, root_name:)
     _, name, number = branch.name.match(/([a-zA-Z_]*)(\d+)/).to_a
 
-    number ? "#{name}#{(number.to_i - 1).to_s.rjust(2, '0')}" : 'master'
+    number ? "#{name}#{(number.to_i - 1).to_s.rjust(2, '0')}" : root_name
   end
 
   def find_branch(branches, name)
@@ -87,14 +91,15 @@ end
 
 class Rebaser
   def call
-    root_branch = TreeBuilder.new.(branches)
+    root_name = ARGV.detect { |arg| arg != '--dry' } || 'master'
+    root_branch = TreeBuilder.new.(branches, root_name: root_name)
 
-    if ARGV[0] == '--dry'
+    if ARGV.any? { |arg| arg == '--dry' }
       puts root_branch.inspect
     else
       rebase_children(root_branch)
     end
-    print `git checkout master`
+    print `git checkout #{root_name}`
   end
 
   def branches
