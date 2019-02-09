@@ -65,8 +65,8 @@ class TreeBuilder
   def link_branch_to_parent(branch, branches)
     return if SKIP_BRANCHES.include?(branch.name)
 
-    master_branch = find_branch(branches, 'master')
-    parent_branch = find_branch(branches, parent_name(branch)) || master_branch
+    root_branch = find_branch(branches, 'master')
+    parent_branch = find_branch(branches, parent_name(branch)) || root_branch
 
     parent_branch.children << branch
   end
@@ -87,12 +87,12 @@ end
 
 class Rebaser
   def call
-    master_branch = TreeBuilder.new.(branches)
+    root_branch = TreeBuilder.new.(branches)
 
     if ARGV[0] == '--dry'
-      puts master_branch.inspect
+      puts root_branch.inspect
     else
-      rebase_children(master_branch)
+      rebase_children(root_branch)
     end
     print `git checkout master`
   end
