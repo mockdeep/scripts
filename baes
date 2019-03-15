@@ -76,14 +76,14 @@ class TreeBuilder
   end
 
   def parent_name(branch, root_name:)
-    _, name, number = branch.name.match(/([a-zA-Z_]*)(\d+)/).to_a
+    _, name, number = branch.name.match(/(\A[a-zA-Z_-]+)(\d+)/).to_a
 
-    number ? "#{name}#{(number.to_i - 1).to_s.rjust(2, '0')}" : root_name
+    number ? "#{name}#{(number.to_i - 1).to_s.rjust(number.length, '0')}" : root_name
   end
 
   def find_branch(branches, name)
     @branch_cache[name] ||= branches.detect do |branch|
-      branch.name.end_with?(name)
+      branch.name.start_with?(name)
     end
   end
 
