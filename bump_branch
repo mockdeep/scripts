@@ -1,0 +1,46 @@
+#!/usr/bin/env ruby
+
+require 'pry'
+
+class Branch
+
+  attr_accessor :name, :current
+
+  def initialize(name, current)
+    @name = name
+    @current = current
+  end
+
+end
+
+class Bumper
+
+  def call(branch = current_branch, branches = all_branches)
+    next_name = branch.name.next
+
+    next_branch = branches.detect { |branch| branch.name == next_name }
+
+    if next_branch
+      call(next_branch, branches)
+    end
+
+    print `git checkout #{branch.name}`
+    print `git branch -m #{next_name}`
+    # p "would rename '#{branch.name}' to '#{next_name}'"
+  end
+
+  def current_branch
+    all_branches.detect(&:current)
+  end
+
+  def all_branches
+    `git branch`.lines.map do |branch_line|
+      current = branch_line.start_with?('*')
+      branch_name = branch_line.tr('*', '').strip
+      Branch.new(branch_name, current)
+    end
+  end
+
+end
+
+Bumper.new.()
