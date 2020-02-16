@@ -83,7 +83,7 @@ class TreeBuilder
 
   def find_branch(branches, name)
     @branch_cache[name] ||= branches.detect do |branch|
-      branch.name.start_with?(name)
+      branch.name.end_with?(name)
     end
   end
 

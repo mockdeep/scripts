@@ -1,0 +1,60 @@
+#!/usr/bin/env ruby
+
+# add git stash size
+# add file length check on list.txt
+# add desktop file count checker
+
+module Stat
+  class BranchItem
+    attr_reader :name
+
+    def initialize(name:, git_dir:)
+      @name = name
+      @git_dir = git_dir
+    end
+
+    def branches
+      `git -C #{@git_dir} branch`.lines.grep_v(/master|staging/)
+    end
+
+    def count
+      branches.count
+    end
+
+    def to_s
+      "#{name} branches: #{count}"
+    end
+  end
+
+  class DirectoryItem
+    attr_reader :name
+
+    def initialize(name:, dir:)
+      @name = name
+      @dir = dir
+    end
+
+    def files
+      `ls '#{@dir}'`.lines
+    end
+
+    def count
+      files.count
+    end
+
+    def to_s
+      "#{name} files: #{count}"
+    end
+  end
+end
+
+stats = [
+  Stat::BranchItem.new(name: 'Synchroform', git_dir: "/home/fletch/Sync/projects/chalk/synchroform"),
+  Stat::BranchItem.new(name: 'Questlog', git_dir: "/home/fletch/Sync/projects/web_apps/questlog"),
+  Stat::BranchItem.new(name: 'template', git_dir: "/home/fletch/Sync/projects/open_source/template"),
+  Stat::BranchItem.new(name: 'RMagick', git_dir: "/home/fletch/Sync/projects/open_source/rake-compiler-dev-box/rmagick"),
+  Stat::DirectoryItem.new(name: 'Downloads', dir: "/home/fletch/Downloads"),
+  Stat::DirectoryItem.new(name: 'Pixel Photos', dir: "/home/fletch/Sync/Pixel Camera"),
+]
+
+stats.select { |stat| stat.count.nonzero? }.each(&method(:puts))
