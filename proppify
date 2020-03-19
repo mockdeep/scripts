@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+
+class ThingDoer
+  def do_thing
+    next_file = `git grep -l propTypes`.lines.last.strip
+    code = File.read(next_file).lines
+
+    class_line = code.grep(/^class/).first
+    class_line_no = code.index(class_line)
+    # binding.irb
+
+    code[class_line_no] = class_line.sub('<any', '<Props')
+    code.insert(class_line_no, <<~PROPS)
+    type Props = {
+    }
+
+    PROPS
+
+    prop_type_status = :not_encountered
+
+    code.keep_if do |line|
+      prop_type_status = :done if prop_type_status == :final_newline
+      prop_type_status = :final_newline if prop_type_status == :ending && line == "\n"
+      prop_type_status = :ending if prop_type_status == :inside && line == "};\n"
+      prop_type_status = :inside if line.include?('propTypes')
+
+      prop_type_status == :not_encountered || prop_type_status == :done
+    end
+
+    File.write(next_file, code.join)
+  end
+end
+
+ThingDoer.new.do_thing
