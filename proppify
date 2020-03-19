@@ -1,21 +1,56 @@
 #!/usr/bin/env ruby
 
-class ThingDoer
-  def do_thing
-    next_file = `git grep -l propTypes`.lines.last.strip
-    code = File.read(next_file).lines
+class Binding
+  def pry
+    irb
+  end
+end
 
+class ThingDoer
+  def self.call
+    new.call
+  end
+
+  def call
+    file_path = `git grep -l propTypes`.lines.last.strip
+    code = File.read(file_path).lines
+    add_props_frame(code)
+    File.write(file_path, code.join)
+    add_specific_props(code, file_path)
+    strip_prop_types(code)
+    File.write(file_path, code.join)
+    puts `yarn ts_check`
+  end
+
+  def add_props_frame(code)
     class_line = code.grep(/^class/).first
     class_line_no = code.index(class_line)
-    # binding.irb
 
+    binding.pry
     code[class_line_no] = class_line.sub('<any', '<Props')
-    code.insert(class_line_no, <<~PROPS)
-    type Props = {
-    }
+    code.insert(class_line_no, "type Props = {\n", "}\n", "\n")
+  end
 
-    PROPS
+  def add_specific_props(code, file_path)
+    typescript_lines = `yarn ts_check 2>&1`.lines.grep(/^#{file_path}/)
+    names = typescript_lines.map do |line|
+      line.match(/Property '(.*)' does not exist/)[1]
+    end.uniq.sort
 
+    insert_index = code.index("type Props = {\n") + 1
+    names.reverse.each do |name|
+      type =
+        if name.end_with?("s")
+          "#{name.capitalize.chomp("s")}[]"
+        else
+          name.capitalize
+        end
+
+      code.insert(insert_index, "  #{name}: #{type};\n")
+    end
+  end
+
+  def strip_prop_types(code)
     prop_type_status = :not_encountered
 
     code.keep_if do |line|
@@ -26,9 +61,7 @@ class ThingDoer
 
       prop_type_status == :not_encountered || prop_type_status == :done
     end
-
-    File.write(next_file, code.join)
   end
 end
 
-ThingDoer.new.do_thing
+ThingDoer.call
