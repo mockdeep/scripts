@@ -26,6 +26,7 @@ class Bumper
 
     print `git checkout #{branch.name}`
     print `git branch -m #{next_name}`
+    print `git checkout -b #{branch.name}`
     # p "would rename '#{branch.name}' to '#{next_name}'"
   end
 
