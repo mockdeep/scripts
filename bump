@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+set -euox pipefail
+
+git checkout master
+git pull origin master
+
+git branch | grep rf-bump_yarn || git branch rf-bump_yarn
+git checkout rf-bump_yarn
+yarn
+yarn upgrade
+git grep yarn-deduplicate package.json && yarn yarn-deduplicate
+# yarn && deduplicate twice to make sure `yarn.lock` is settled
+yarn
+git grep yarn-deduplicate package.json && yarn yarn-deduplicate
+git grep eslint package.json && yarn eslint
+git commit -am 'Upgrades: bump minor npm package versions'
+git push -f
+hub pull-request --no-edit -o || true
+
+git checkout master
+git branch | grep rf-bump_gems || git branch rf-bump_gems
+git checkout rf-bump_gems
+bundle
+bundle update --minor
+bundle exec rubocop
+git commit -am 'Upgrades: bump minor gem versions'
+git push
+hub pull-request --no-edit -o
