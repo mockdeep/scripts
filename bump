@@ -10,7 +10,13 @@ git checkout rf-bump_yarn
 yarn
 yarn upgrade
 git grep yarn-deduplicate package.json && yarn yarn-deduplicate
-# yarn && deduplicate twice to make sure `yarn.lock` is settled
+# yarn && deduplicate multiple times to make sure `yarn.lock` is settled
+yarn
+git grep yarn-deduplicate package.json && yarn yarn-deduplicate
+yarn
+git grep yarn-deduplicate package.json && yarn yarn-deduplicate
+yarn
+git grep yarn-deduplicate package.json && yarn yarn-deduplicate
 yarn
 git grep yarn-deduplicate package.json && yarn yarn-deduplicate
 git grep eslint package.json && yarn eslint
