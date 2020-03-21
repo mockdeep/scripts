@@ -24,16 +24,24 @@ class ThingDoer
 
   def add_props_frame(code)
     class_line = code.grep(/^class/).first
-    class_line_no = code.index(class_line)
+    if class_line
+      class_line_no = code.index(class_line)
 
-    binding.pry
-    code[class_line_no] = class_line.sub('<any', '<Props')
-    code.insert(class_line_no, "type Props = {\n", "}\n", "\n")
+      code[class_line_no] = class_line.sub('<any', '<Props')
+      code.insert(class_line_no, "type Props = {\n", "}\n", "\n")
+    else
+      function_line = code.grep(/^function [A-Z]/).first
+      function_line_no = code.index(function_line)
+
+      code[function_line_no] = function_line.sub('(props)', '(props: Props)')
+      code.insert(function_line_no, "type Props = {\n", "}\n", "\n")
+    end
   end
 
   def add_specific_props(code, file_path)
     typescript_lines = `yarn ts_check 2>&1`.lines.grep(/^#{file_path}/)
     names = typescript_lines.map do |line|
+      p line
       line.match(/Property '(.*)' does not exist/)[1]
     end.uniq.sort
 
@@ -51,6 +59,7 @@ class ThingDoer
   end
 
   def strip_prop_types(code)
+    code.delete("import PropTypes from 'prop-types';\n")
     prop_type_status = :not_encountered
 
     code.keep_if do |line|
