@@ -20,7 +20,6 @@ class ThingDoer
     strip_prop_types(code)
     add_props_export(code)
     File.write(file_path, code.join)
-    puts `yarn ts_check`
   end
 
   def add_props_frame(code)
@@ -40,7 +39,11 @@ class ThingDoer
   end
 
   def capitalize(string)
-    string.split('_').map(&:capitalize).join
+    if string.include?('_')
+      string.split('_').map(&method(:capitalize)).join
+    else
+      "#{string[0].upcase}#{string[1..-1]}"
+    end
   end
 
   def add_specific_props(code, file_path)
@@ -49,6 +52,10 @@ class ThingDoer
       p line
       line.match(/Property '(.*)' does not exist/)[1]
     end.uniq.sort
+
+    # global_types = `git grep '^type ' *.d.ts`.lines.map do |type_line|
+    #   type_line.match(/type (\w+) /)[1]
+    # end
 
     insert_index = code.index("type Props = {\n") + 1
     names.reverse.each do |name|
