@@ -18,6 +18,7 @@ class ThingDoer
     File.write(file_path, code.join)
     add_specific_props(code, file_path)
     strip_prop_types(code)
+    add_props_export(code)
     File.write(file_path, code.join)
     puts `yarn ts_check`
   end
@@ -38,6 +39,10 @@ class ThingDoer
     end
   end
 
+  def capitalize(string)
+    string.split('_').map(&:capitalize).join
+  end
+
   def add_specific_props(code, file_path)
     typescript_lines = `yarn ts_check 2>&1`.lines.grep(/^#{file_path}/)
     names = typescript_lines.map do |line|
@@ -49,9 +54,9 @@ class ThingDoer
     names.reverse.each do |name|
       type =
         if name.end_with?("s")
-          "#{name.capitalize.chomp("s")}[]"
+          "#{capitalize(name).chomp("s")}[]"
         else
-          name.capitalize
+          capitalize(name)
         end
 
       code.insert(insert_index, "  #{name}: #{type};\n")
@@ -70,6 +75,10 @@ class ThingDoer
 
       prop_type_status == :not_encountered || prop_type_status == :done
     end
+  end
+
+  def add_props_export(code)
+    code << "export { Props };\n"
   end
 end
 
