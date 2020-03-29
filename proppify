@@ -6,6 +6,31 @@ class Binding
   end
 end
 
+class BaseStrategy
+  def self.capitalize(string)
+    if string.include?('_')
+      string.split('_').map(&method(:capitalize)).join
+    else
+      "#{string[0].upcase}#{string[1..-1]}"
+    end
+  end
+end
+
+
+class BestGuessStrategy < BaseStrategy
+  def self.insert_type(name, code, file_path)
+    insert_index = code.index("type Props = {\n") + 1
+    type =
+      if name.end_with?("s")
+        "#{capitalize(name).chomp("s")}[]"
+      else
+        capitalize(name)
+      end
+
+    code.insert(insert_index, "  #{name}: #{type};\n")
+  end
+end
+
 class ThingDoer
   def self.call
     new.call
@@ -38,14 +63,6 @@ class ThingDoer
     end
   end
 
-  def capitalize(string)
-    if string.include?('_')
-      string.split('_').map(&method(:capitalize)).join
-    else
-      "#{string[0].upcase}#{string[1..-1]}"
-    end
-  end
-
   def add_specific_props(code, file_path)
     typescript_lines = `yarn ts_check 2>&1`.lines.grep(/^#{file_path}/)
     names = typescript_lines.map do |line|
@@ -57,16 +74,8 @@ class ThingDoer
     #   type_line.match(/type (\w+) /)[1]
     # end
 
-    insert_index = code.index("type Props = {\n") + 1
     names.reverse.each do |name|
-      type =
-        if name.end_with?("s")
-          "#{capitalize(name).chomp("s")}[]"
-        else
-          capitalize(name)
-        end
-
-      code.insert(insert_index, "  #{name}: #{type};\n")
+      BestGuessStrategy.insert_type(name, code, file_path)
     end
   end
 
