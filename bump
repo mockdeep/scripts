@@ -29,7 +29,7 @@ git branch | grep rf-bump_gems || git branch rf-bump_gems
 git checkout rf-bump_gems
 bundle
 bundle update --minor
-bundle exec rubocop
+bundle exec rubocop --auto-gen-config
 git commit -am 'Upgrades: bump minor gem versions'
 git push
 hub pull-request --no-edit -o
