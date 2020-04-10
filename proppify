@@ -16,18 +16,46 @@ class BaseStrategy
   end
 end
 
+class FindActionCreatorStrategy < BaseStrategy
+  def self.insert_type(names, code, file_path)
+    container_path = file_path.sub('components', 'containers').sub('tsx', 'ts')
+
+    return names unless File.exist?(container_path)
+
+    container_code = File.read(container_path).lines
+    import_lines = find_import_lines(container_code)
+
+    names.each do |name|
+      import_lines.each do |import_line|
+        next unless import_line.include?(name)
+
+        import_line.sub!(name, capitalize(name))
+      end
+    end
+
+    insert_index = code.index(code.grep(/^import/).last) + 1
+    code.insert(insert_index, *import_lines)
+  end
+
+  def self.find_import_lines(container_code)
+    container_code.grep(/import.*action_creators/)
+  end
+end
 
 class BestGuessStrategy < BaseStrategy
-  def self.insert_type(name, code, file_path)
+  def self.insert_type(names, code, file_path)
     insert_index = code.index("type Props = {\n") + 1
-    type =
-      if name.end_with?("s")
-        "#{capitalize(name).chomp("s")}[]"
-      else
-        capitalize(name)
-      end
 
-    code.insert(insert_index, "  #{name}: #{type};\n")
+    names.reverse.each do |name|
+      type =
+        if name.end_with?("s")
+          "#{capitalize(name).chomp("s")}[]"
+        else
+          capitalize(name)
+        end
+
+      code.insert(insert_index, "  #{name}: #{type};\n")
+    end
   end
 end
 
@@ -74,9 +102,8 @@ class ThingDoer
     #   type_line.match(/type (\w+) /)[1]
     # end
 
-    names.reverse.each do |name|
-      BestGuessStrategy.insert_type(name, code, file_path)
-    end
+    FindActionCreatorStrategy.insert_type(names, code, file_path)
+    BestGuessStrategy.insert_type(names, code, file_path)
   end
 
   def strip_prop_types(code)
