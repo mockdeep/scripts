@@ -14,7 +14,7 @@ module Stat
     end
 
     def branches
-      `git -C #{@git_dir} branch`.lines.grep_v(/master|staging/)
+      `git -C #{@git_dir} branch`.lines.grep_v(/main|staging/)
     end
 
     def count

@@ -2,34 +2,34 @@
 
 set -euox pipefail
 
-git checkout master
-git pull origin master
+git checkout main
+git pull origin main
 
 git branch | grep rf-bump_yarn || git branch rf-bump_yarn
 git checkout rf-bump_yarn
 yarn
 yarn upgrade
-git grep yarn-deduplicate package.json && yarn yarn-deduplicate
+git grep yarn-deduplicate package.json && yarn deduplicate
 # yarn && deduplicate multiple times to make sure `yarn.lock` is settled
 yarn
-git grep yarn-deduplicate package.json && yarn yarn-deduplicate
+git grep yarn-deduplicate package.json && yarn deduplicate
 yarn
-git grep yarn-deduplicate package.json && yarn yarn-deduplicate
+git grep yarn-deduplicate package.json && yarn deduplicate
 yarn
-git grep yarn-deduplicate package.json && yarn yarn-deduplicate
+git grep yarn-deduplicate package.json && yarn deduplicate
 yarn
-git grep yarn-deduplicate package.json && yarn yarn-deduplicate
+git grep yarn-deduplicate package.json && yarn deduplicate
 git grep eslint package.json && yarn eslint
-git commit -am 'Upgrades: bump minor npm package versions'
-git push -f
-hub pull-request --no-edit -o || true
+git commit -am 'Upgrades: bump minor npm package versions' || true
+git push -f -u origin rf-bump_yarn
+gh pr create --fill
 
-git checkout master
+git checkout main
 git branch | grep rf-bump_gems || git branch rf-bump_gems
 git checkout rf-bump_gems
 bundle
 bundle update --minor
 bundle exec rubocop --auto-gen-config
 git commit -am 'Upgrades: bump minor gem versions'
-git push
-hub pull-request --no-edit -o
+git push -f -u origin rf-bump_gems
+gh pr create --fill

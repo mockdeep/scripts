@@ -3,7 +3,7 @@
 require 'English'
 require 'open3'
 
-SKIP_BRANCHES = %w[staging master]
+SKIP_BRANCHES = %w[staging main]
 
 class Branch
 
@@ -91,7 +91,7 @@ end
 
 class Rebaser
   def call
-    root_name = ARGV.detect { |arg| arg != '--dry' } || 'master'
+    root_name = ARGV.detect { |arg| arg != '--dry' } || 'main'
     root_branch = TreeBuilder.new.(branches, root_name: root_name)
 
     if ARGV.any? { |arg| arg == '--dry' }

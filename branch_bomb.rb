@@ -6,7 +6,7 @@ class Differ
 
   def initialize(bomb_branch=nil, git_method='merge')
     self.bomb_branch = bomb_branch || current_branch
-    raise 'I can\'t let you do that, Bob' if bomb_branch == 'master'
+    raise 'I can\'t let you do that, Bob' if bomb_branch == 'main'
 
     self.git_method = git_method
   end
@@ -47,7 +47,7 @@ puts branch
 
 differ = Differ.new(branch, 'merge')
 
-if differ.same?('master') || differ.same?('staging')
+if differ.same?('main') || differ.same?('staging')
   puts "*" * 80
   puts "Branch #{differ.bomb_branch} matches #{differ.base_branch}, sending it to oblivion"
   puts "*" * 80
