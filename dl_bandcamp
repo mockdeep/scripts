@@ -1,0 +1,77 @@
+#!/usr/bin/env ruby
+
+require 'open-uri'
+require 'capybara'
+require 'pry'
+
+module BandcampDL
+  class Album
+  end
+
+  class Discography
+    attr_reader :url
+
+    def initialize(url)
+      @url = url
+    end
+
+    def element
+      @element ||= Capybara.string(URI.open(url).read)
+    end
+
+    def album_urls
+      element.find('#discography').all('.trackTitle').map do |title|
+        path = title.find('a')['href']
+
+        "#{url}#{path}"
+      end
+    end
+
+    def artist
+      element.title
+    end
+  end
+
+  class Runner
+    def released_year(album_element)
+      album_element
+        .find('.tralbum-credits')
+        .text
+        .split("\n")
+        .grep(/^\s*released/)
+        .first[-4..-1]
+    end
+
+    def download_album(artist, album_url)
+      album_element = Capybara.string(URI.open(album_url).read)
+      album_title = album_element.find('#name-section').find('.trackTitle').text.strip
+      year = released_year(album_element)
+      album = "#{year} - #{album_title}"
+      album_path = "#{artist}/#{album}"
+      command = [
+        "youtube-dl",
+        "-o", "#{album_path}/%(autonumber)03d %(title)s.%(ext)s",
+        album_url,
+        "-f", "mp3",
+      ]
+      p command
+      result = system(*command, out: STDOUT)
+      raise "failed to download" unless result
+      album_art_url = album_element.find('#tralbumArt').find('a.popupImage')['href']
+      File.write("#{album_path}/cover.jpg", URI.open(album_art_url).read)
+      # https://robinst.github.io/taglib-ruby/
+      # Bonus: set album art on songs
+      # Bonus: set artist on songs
+      # Bonus: set track number on songs
+      # Bonus: set track year on songs
+    end
+
+    def call(url)
+      discography = Discography.new(url)
+
+      discography.album_urls.each { |album_url| download_album(discography.artist, album_url) }
+    end
+  end
+end
+
+BandcampDL::Runner.new.call(ARGV.first)
