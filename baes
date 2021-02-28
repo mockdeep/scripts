@@ -3,7 +3,7 @@
 require 'English'
 require 'open3'
 
-SKIP_BRANCHES = %w[staging main]
+SKIP_BRANCHES = %w[staging main master]
 
 class Branch
 
@@ -91,7 +91,7 @@ end
 
 class Rebaser
   def call
-    root_name = ARGV.detect { |arg| arg != '--dry' } || 'main'
+    root_name = ARGV.detect { |arg| arg != '--dry' } || current_branch
     root_branch = TreeBuilder.new.(branches, root_name: root_name)
 
     if ARGV.any? { |arg| arg == '--dry' }
@@ -104,6 +104,10 @@ class Rebaser
 
   def branches
     `git branch`.lines.map { |line| Branch.new(line.strip.tr('* ', '')) }
+  end
+
+  def current_branch
+    `git branch`.lines.grep(/^\*/).first.strip.tr('* ', '')
   end
 
   def rebase_children(branch)
