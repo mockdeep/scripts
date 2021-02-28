@@ -6,35 +6,77 @@ require 'pry'
 
 module BandcampDL
   class Album
-  end
+    DOWNLOADED_URLS_FILE = 'downloaded_urls'
+    attr_reader :artist, :url
 
-  class Discography
-    attr_reader :url
-
-    def initialize(url)
+    def initialize(artist, url)
+      @artist = artist
       @url = url
     end
 
-    def element
-      @element ||= Capybara.string(URI.open(url).read)
+    def page
+      @page ||= Capybara.string(URI.open(url).read)
     end
 
-    def album_urls
-      element.find('#discography').all('.trackTitle').map do |title|
-        path = title.find('a')['href']
+    def download
+      puts "*" * 100
+      if already_downloaded?
+        puts "already downloaded, skipping: #{title}"
+        return
+      end
 
-        "#{url}#{path}"
+      download_files
+      download_art
+      set_track_info
+      mark_downloaded
+      puts "finished downloading #{title}"
+      puts "*" * 100
+    end
+
+    def already_downloaded?
+      File.exist?(DOWNLOADED_URLS_FILE) && File.read(DOWNLOADED_URLS_FILE).include?(url)
+    end
+
+    def mark_downloaded
+      File.open(DOWNLOADED_URLS_FILE, 'a') do |file|
+        file.puts(url)
       end
     end
 
-    def artist
-      element.title
+    def download_files
+      command = [
+        "youtube-dl",
+        "-o", "#{store_path}/%(autonumber)03d %(title)s.%(ext)s",
+        url,
+        "-f", "mp3",
+      ]
+      p command
+      result = system(*command, out: STDOUT)
+      raise "failed to download" unless result
     end
-  end
 
-  class Runner
-    def released_year(album_element)
-      album_element
+    def download_art
+      art_url = page.find('#tralbumArt').find('a.popupImage')['href']
+      File.write("#{store_path}/cover.jpg", URI.open(art_url).read)
+    end
+
+    def set_track_info
+      # https://robinst.github.io/taglib-ruby/
+      # https://github.com/robinst/taglib-ruby/issues/101
+      # https://www.go4expert.com/articles/read-update-mp3-id3-tags-ruby-t29652/
+      # Bonus: set album art on songs
+      # Bonus: set artist on songs
+      # Bonus: set track number on songs
+      # Bonus: set track year on songs
+      # Bonus: clear play count
+    end
+
+    def store_path
+      "#{artist.name}/#{year} - #{title}"
+    end
+
+    def year
+      page
         .find('.tralbum-credits')
         .text
         .split("\n")
@@ -42,34 +84,83 @@ module BandcampDL
         .first[-4..-1]
     end
 
-    def download_album(artist, album_url)
-      album_element = Capybara.string(URI.open(album_url).read)
-      album_title = album_element.find('#name-section').find('.trackTitle').text.strip
-      year = released_year(album_element)
-      album = "#{year} - #{album_title}"
-      album_path = "#{artist}/#{album}"
-      command = [
-        "youtube-dl",
-        "-o", "#{album_path}/%(autonumber)03d %(title)s.%(ext)s",
-        album_url,
-        "-f", "mp3",
-      ]
-      p command
-      result = system(*command, out: STDOUT)
-      raise "failed to download" unless result
-      album_art_url = album_element.find('#tralbumArt').find('a.popupImage')['href']
-      File.write("#{album_path}/cover.jpg", URI.open(album_art_url).read)
-      # https://robinst.github.io/taglib-ruby/
-      # Bonus: set album art on songs
-      # Bonus: set artist on songs
-      # Bonus: set track number on songs
-      # Bonus: set track year on songs
+    def title
+      page.find('#name-section').find('.trackTitle').text.strip
+    end
+  end
+
+  class MainPage
+    attr_reader :page, :root_url
+
+    def initialize(page, root_url)
+      @page = page
+      @root_url = root_url
     end
 
-    def call(url)
-      discography = Discography.new(url)
+    def album_urls
+      page.find('#discography').all('.trackTitle').map do |title|
+        path = title.find('a')['href']
 
-      discography.album_urls.each { |album_url| download_album(discography.artist, album_url) }
+        "#{root_url}#{path}"
+      end
+    end
+  end
+
+  class MusicPage
+    attr_reader :page, :root_url
+
+    def initialize(page, root_url)
+      @page = page
+      @root_url = root_url
+    end
+
+    def album_urls
+      page.find("#music-grid").all('.music-grid-item').map do |grid_item|
+        path = grid_item.find('a')['href']
+
+        "#{root_url}#{path}"
+      end
+    end
+  end
+
+  class Artist
+    attr_reader :root_url
+
+    def initialize(root_url)
+      @root_url = root_url
+    end
+
+    def page
+      @page ||= Capybara.string(URI.open(root_url).read)
+    end
+
+    def discography
+      @discography ||=
+        begin
+          if page.has_selector?('.showMore')
+            music_path = page.find('.showMore').find('a')['href']
+            music_url = "#{root_url}#{music_path}"
+            music_page = Capybara.string(URI.open(music_url).read)
+
+            MusicPage.new(music_page, root_url)
+          else
+            MainPage.new(page, root_url)
+          end
+        end
+    end
+
+    def albums
+      discography.album_urls.map { |album_url| Album.new(self, album_url) }
+    end
+
+    def name
+      page.title
+    end
+  end
+
+  class Runner
+    def call(root_url)
+      Artist.new(root_url).albums.each(&:download)
     end
   end
 end
