@@ -91,7 +91,6 @@ end
 
 class Rebaser
   def call
-    root_name = ARGV.detect { |arg| arg != '--dry' } || current_branch
     root_branch = TreeBuilder.new.(branches, root_name: root_name)
 
     if ARGV.any? { |arg| arg == '--dry' }
@@ -103,11 +102,15 @@ class Rebaser
   end
 
   def branches
-    `git branch`.lines.map { |line| Branch.new(line.strip.tr('* ', '')) }
+    @branches ||= `git branch`.lines.map do |line|
+      Branch.new(line.strip.tr('* ', ''))
+    end
   end
 
-  def current_branch
-    `git branch`.lines.grep(/^\*/).first.strip.tr('* ', '')
+  def root_name
+    root = ARGV.detect { |arg| arg != '--dry' }
+    root ||= 'main' if branches.any? { |branch| branch.name == 'main' }
+    root || 'master'
   end
 
   def rebase_children(branch)
