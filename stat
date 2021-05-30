@@ -49,12 +49,12 @@ module Stat
 end
 
 stats = [
-  Stat::BranchItem.new(name: 'Synchroform', git_dir: "/home/fletch/Sync/projects/chalk/synchroform"),
-  Stat::BranchItem.new(name: 'Questlog', git_dir: "/home/fletch/Sync/projects/web_apps/questlog"),
-  Stat::BranchItem.new(name: 'template', git_dir: "/home/fletch/Sync/projects/open_source/template"),
-  Stat::BranchItem.new(name: 'RMagick', git_dir: "/home/fletch/Sync/projects/open_source/rake-compiler-dev-box/rmagick"),
+  Stat::BranchItem.new(name: 'Synchroform', git_dir: "/home/fletch/Dropbox/projects/chalk/synchroform"),
+  Stat::BranchItem.new(name: 'Questlog', git_dir: "/home/fletch/Dropbox/projects/web_apps/questlog"),
+  Stat::BranchItem.new(name: 'template', git_dir: "/home/fletch/Dropbox/projects/open_source/template"),
+  Stat::BranchItem.new(name: 'RMagick', git_dir: "/home/fletch/Dropbox/projects/open_source/rake-compiler-dev-box/rmagick"),
   Stat::DirectoryItem.new(name: 'Downloads', dir: "/home/fletch/Downloads"),
-  Stat::DirectoryItem.new(name: 'Pixel Photos', dir: "/home/fletch/Sync/Pixel Camera"),
+  Stat::DirectoryItem.new(name: 'Pixel Photos', dir: "/home/fletch/Dropbox/Pixel Camera"),
 ]
 
 stats.select { |stat| stat.count.nonzero? }.each(&method(:puts))

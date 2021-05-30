@@ -4,7 +4,7 @@ set -e
 # system-setup.sh.  It's then necessary to sync the dotfiles
 # directory
 
-FILE_ROOT=$HOME/Sync
+FILE_ROOT=$HOME/Dropbox
 
 ln -sf $FILE_ROOT/dotfiles/bashrc ~/.bashrc
 ln -sf $FILE_ROOT/dotfiles/rspec ~/.rspec
@@ -26,5 +26,3 @@ ln -sf $FILE_ROOT/dotfiles/banshee-1 ~/.config/
 ln -sf $FILE_ROOT/list.txt ~/list.txt
 ln -sf $FILE_ROOT/Documents/bars.yml ~/bars.yml
 ln -sf $FILE_ROOT/Documents/rudo.yml ~/rudo.yml
-ln -sf $FILE_ROOT/Templates/Document.odt ~/Templates/Document.odt
-ln -sf $FILE_ROOT/Templates/Spreadsheet.ods ~/Templates/Spreadsheet.ods
