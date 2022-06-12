@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+
+file_paths = Dir['app/javascript/**/*.ts*']
+
+def replace_finders(lines)
+  getter_contents = Set.new
+  previous_get = false
+  new_lines = lines.map do |line|
+    if line.include?('this.$element.find') && !previous_get
+      match = line.grep(/this\.\$element\.find\('(\S+)'\)/)
+
+    else
+      previous_get = line.include?(' get ')
+    end
+  end
+end
+
+file_paths.each do |file_path|
+  lines = File.read(file_path)
+
+  results = replace_finders(lines)
+  add_getters(lines, getter_contents)
+  replace_finders
+end

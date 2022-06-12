@@ -21,8 +21,11 @@ ln -sf $FILE_ROOT/dotfiles/railsrc ~/.railsrc
 
 ln -sf $FILE_ROOT/dotfiles/.ssh ~/
 ln -sf $FILE_ROOT/dotfiles/.vim ~/
-ln -sf $FILE_ROOT/dotfiles/banshee-1 ~/.config/
 
 ln -sf $FILE_ROOT/list.txt ~/list.txt
-ln -sf $FILE_ROOT/Documents/bars.yml ~/bars.yml
-ln -sf $FILE_ROOT/Documents/rudo.yml ~/rudo.yml
+
+# ASDF related stuff
+ln -sf $FILE_ROOT/dotfiles/asdfrc ~/.asdfrc
+ln -sf $FILE_ROOT/dotfiles/default-gems ~/.default-gems
+ln -sf $FILE_ROOT/dotfiles/tool-versions ~/.tool-versions
+ln -sf $FILE_ROOT/dotfiles/asdf-postgres-configure-options ~/.asdf-postgres-configure-options
