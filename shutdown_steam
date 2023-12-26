@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+now=$(date +%H:%M)
+
+echo $now
+if [ "$now" \> "21:00" ]; then
+  killall steam
+fi
