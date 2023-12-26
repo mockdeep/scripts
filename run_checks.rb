@@ -6,6 +6,7 @@ require "active_support/all"
 
 NOTICE_USER_ID = ENV.fetch("NOTICE_USER_ID")
 NOTICE_API_KEY = ENV.fetch("NOTICE_API_KEY")
+NOTICE_FASTMAIL_API_TOKEN = ENV.fetch("NOTICE_FASTMAIL_API_TOKEN")
 HOME_DIR = Pathname.new(File.expand_path("~"))
 
 def check_counts_url(check_id)
@@ -51,7 +52,32 @@ def check_photos
   puts "reported #{count} photos to upload"
 end
 
+def check_empty_music_dirs
+  puts "checking for empty music directories"
+  result = `ruby ~/Dropbox/Media/Music/empty_dirs.rb`
+  count = result.lines.length
+  post_count(check_id: 47, count:)
+  puts "reported #{count} empty music directories"
+end
+
+# https://www.fastmail.com/for-developers/integrating-with-fastmail/
+# https://github.com/fastmail/JMAP-Samples/blob/main/javascript/top-ten.js
+# https://jmap.io/crash-course.html#using-result-references
+# def check_fastmail_inbox
+#   puts "checking fastmail inbox"
+#   headers = { Authorization: "Bearer #{NOTICE_FASTMAIL_API_TOKEN}", "Content-Type": "application/json" }
+
+#   response = HTTParty.get("https://api.fastmail.com/jmap/session", headers: headers)
+#   binding.pry
+#   count = response["total"]
+#   post_count(check_id: 37, count: count)
+#   puts "reported #{count} fastmail inbox items"
+# end
+
+
 check_downloads
 check_todo_list
 check_pixel_photos
 check_photos
+check_empty_music_dirs
+# check_fastmail_inbox
