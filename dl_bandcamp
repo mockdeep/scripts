@@ -1,5 +1,14 @@
 #!/usr/bin/env ruby
 
+require 'bundler/inline'
+
+gemfile do
+  source 'https://rubygems.org'
+
+  gem 'capybara'
+  gem 'pry'
+end
+
 require 'open-uri'
 require 'capybara'
 require 'pry'
@@ -45,14 +54,14 @@ module BandcampDL
 
     def download_files
       command = [
-        "youtube-dl",
+        "yt-dlp",
         "-o", "#{store_path}/%(autonumber)03d %(title)s.%(ext)s",
         url,
         "-f", "mp3",
       ]
       p command
       result = system(*command, out: STDOUT)
-      raise "failed to download" unless result
+      warn "failed to download" unless result
     end
 
     def download_art
@@ -98,10 +107,18 @@ module BandcampDL
     end
 
     def album_urls
-      page.find('#discography').all('.trackTitle').map do |title|
-        path = title.find('a')['href']
+      if page.has_selector?('#discography')
+        page.find('#discography').all('.trackTitle').map do |title|
+          path = title.find('a')['href']
 
-        "#{root_url}#{path}"
+          path.start_with?("http") ? path : "#{root_url}#{path}"
+        end
+      else
+        page.find('#music-grid').all('.music-grid-item').map do |grid_item|
+          path = grid_item.find('a')['href']
+
+          "#{root_url}#{path}"
+        end
       end
     end
   end
@@ -138,12 +155,15 @@ module BandcampDL
       @discography ||=
         begin
           if page.has_selector?('.showMore')
+            p "music page"
             music_path = page.find('.showMore').find('a')['href']
+            p music_path
             music_url = "#{root_url}#{music_path}"
             music_page = Capybara.string(URI.open(music_url).read)
 
             MusicPage.new(music_page, root_url)
           else
+            p "main page"
             MainPage.new(page, root_url)
           end
         end
