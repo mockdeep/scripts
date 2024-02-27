@@ -3,6 +3,7 @@
 require "pry"
 require "httparty"
 require "active_support/all"
+require_relative "./measure_chains"
 
 NOTICE_USER_ID = ENV.fetch("NOTICE_USER_ID")
 NOTICE_API_KEY = ENV.fetch("NOTICE_API_KEY")
@@ -60,6 +61,29 @@ def check_empty_music_dirs
   puts "reported #{count} empty music directories"
 end
 
+def check_branch_chains
+  puts "checking for branch chains"
+
+  chains = measure_chains(git_directory: "~/Dropbox/projects/chalk/synchroform").to_h
+  expected_counts = {
+    "rf-flake_ally" => 30,
+    "rf-doc_editor" => 30,
+    "rf-jquery" => 30,
+    "rf-coverage" => 10,
+    "rf-expire_tokens" => 10,
+  }
+
+  needed_branches = expected_counts.map do |branch, expected_count|
+    [branch, (expected_count - chains[branch].to_i).clamp(0..)]
+  end.to_h
+
+  post_count(check_id: 49, count: needed_branches["rf-flake_ally"])
+  post_count(check_id: 50, count: needed_branches["rf-doc_editor"])
+  post_count(check_id: 51, count: needed_branches["rf-jquery"])
+  post_count(check_id: 52, count: needed_branches["rf-coverage"])
+  post_count(check_id: 53, count: needed_branches["rf-expire_tokens"])
+end
+
 # https://www.fastmail.com/for-developers/integrating-with-fastmail/
 # https://github.com/fastmail/JMAP-Samples/blob/main/javascript/top-ten.js
 # https://jmap.io/crash-course.html#using-result-references
@@ -74,10 +98,10 @@ end
 #   puts "reported #{count} fastmail inbox items"
 # end
 
-
 check_downloads
 check_todo_list
 check_pixel_photos
 check_photos
 check_empty_music_dirs
+check_branch_chains
 # check_fastmail_inbox
