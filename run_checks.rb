@@ -69,8 +69,8 @@ def check_branch_chains
     "rf-flake_ally" => 30,
     "rf-doc_editor" => 30,
     "rf-jquery" => 30,
-    "rf-coverage" => 10,
-    "rf-expire_tokens" => 10,
+    "rf-coverage" => 16,
+    "rf-expire_tokens" => 16,
   }
 
   needed_branches = expected_counts.map do |branch, expected_count|
