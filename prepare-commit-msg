@@ -2,22 +2,25 @@
 # frozen_string_literal: true
 
 TEMPLATE_PATH = '.git/hooks/commit_templates'
+TEMPLATES = Dir["#{TEMPLATE_PATH}/*"]
+DEFAULT_TEMPLATE = "#{TEMPLATE_PATH}/default".freeze
+
+def find_template(branch_name)
+  TEMPLATES.find do |template_path|
+    branch_name.match?(/#{File.basename(template_path)}/)
+  end
+end
 
 commit_file, commit_type = ARGV
 
 exit 0 if commit_type
 
-branch_base = `git branch --show-current`.strip.sub(/_\d+$/, '')
+branch_name = `git branch --show-current`.strip
+template_path = find_template(branch_name) || DEFAULT_TEMPLATE
 
-p branch_base
+p "commit template: #{template_path}"
 
-template =
-  if File.exist?("#{TEMPLATE_PATH}/#{branch_base}")
-    File.read("#{TEMPLATE_PATH}/#{branch_base}")
-  else
-    File.read("#{TEMPLATE_PATH}/default")
-  end
+template_contents = File.read(template_path)
+commit_contents = File.read(commit_file)
 
-file_contents = File.read(commit_file)
-
-File.write(commit_file, [template, file_contents].join)
+File.write(commit_file, [template_contents, commit_contents].join)
