@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+
+def mp3s?(path)
+  Dir.entries(path).any? do |entry|
+    next if %w[. ..].include?(entry)
+
+    sub_path = File.join(path, entry)
+
+    entry.end_with?('.mp3') || File.directory?(sub_path) && mp3s?(sub_path)
+  end
+end
+
+def subdirectories(path)
+  Dir.glob(File.join(path, "/**/*")).sort.select(&File.method(:directory?))
+end
+
+subdirectories(ENV.fetch('MUSIC_PATH')).reject(&method(:mp3s?)).each do |dir|
+  system("xdg-open '#{dir}'")
+end
+
+# IFS=$'\n'; for file in $(ruby empty_dirs.rb | head); do xdg-open "$file"; done
