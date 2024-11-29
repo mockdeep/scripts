@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+
+Thread.abort_on_exception = true
+
+require "bundler/inline"
+
+gemfile do
+  source 'https://rubygems.org'
+  gem 'mini_exiftool'
+end
+
+Dir.glob("./*.{jpeg,jpg,JPG}").each do |file_path|
+  item = MiniExiftool.new(file_path)
+  if item.date_time_original.nil?
+    puts "No date time original for #{file_path}"
+  else
+    new_file_name = item.date_time_original.strftime("%Y-%m-%d_%H-%M-%S") + ".jpg"
+    puts "Renaming #{file_path} to #{new_file_name}"
+    File.rename(file_path, new_file_name)
+  end
+end
+
