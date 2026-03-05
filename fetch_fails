@@ -1,0 +1,69 @@
+#!/usr/bin/env ruby
+
+require 'bundler/inline'
+
+gemfile do
+  source 'https://rubygems.org'
+  # gem 'activesupport', '~> 6.1.5', require: 'active_support/all'
+  gem 'http', '~> 5.2.0'
+end
+
+PROJECT_NAME = 'InformedK12'
+REPO_NAME = 'synchroform'
+CIRCLE_BRANCH = `git rev-parse --abbrev-ref HEAD`.strip
+CIRCLE_TOKEN = ENV['INFORMED_CIRCLECI_API_TOKEN']
+CIRCLE_BASE_URL = "https://circleci.com/api/v2"
+CIRCLE_PROJECT_URL = "#{CIRCLE_BASE_URL}/project/github/#{PROJECT_NAME}/#{REPO_NAME}"
+
+def url(path, **params)
+  params['circle-token'] = CIRCLE_TOKEN
+  "#{CIRCLE_BASE_URL}/#{path}?#{URI.encode_www_form(params)}"
+end
+
+def project_url(path, **params)
+  params['circle-token'] = CIRCLE_TOKEN
+  "#{CIRCLE_PROJECT_URL}/#{path}?#{URI.encode_www_form(params)}"
+end
+
+def pipelines_url
+  project_url('pipeline', branch: CIRCLE_BRANCH)
+end
+
+def workflows_url(pipeline_id)
+  url("pipeline/#{pipeline_id}/workflow")
+end
+
+def jobs_url(workflow_id)
+  url("workflow/#{workflow_id}/job")
+end
+
+def pipelines
+  response = HTTP.get(pipelines_url)
+  JSON.parse(response, symbolize_names: true).fetch(:items)
+end
+
+def workflows
+  pipeline = pipelines.first
+  response = HTTP.get(workflows_url(pipeline[:id]))
+  JSON.parse(response, symbolize_names: true).fetch(:items)
+end
+
+def jobs
+  workflow = workflows.first
+  response = HTTP.get(jobs_url(workflow[:id]))
+  JSON.parse(response, symbolize_names: true).fetch(:items)
+end
+
+def failed_jobs
+  jobs.select { |job| job[:status] == 'failed' }
+end
+
+# fetch failed tests from CircleCI for the current branch
+def fetch_fails
+  # url = "https://circleci.com/api/v2/project/github/#{PROJECT_NAME}/#{REPO_NAME}?circle-token=#{CIRCLE_TOKEN}&limit=30&shallow=true&branch=#{CIRCLE_BRANCH}"
+  # url = 'https://circleci.com/api/v2/project/github/CircleCI-Public/api-preview-docs/pipeline'
+  # url = "https://circleci.com/api/v2/project/github/InformedK12/synchroform/pipeline?circle-token=#{CIRCLE_TOKEN}&branch=#{CIRCLE_BRANCH}"
+  binding.irb
+end
+
+fetch_fails

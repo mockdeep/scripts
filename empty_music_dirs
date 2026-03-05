@@ -15,7 +15,7 @@ def subdirectories(path)
 end
 
 subdirectories(ENV.fetch('MUSIC_PATH')).reject(&method(:mp3s?)).each do |dir|
-  system("xdg-open '#{dir}'")
+  system("xdg-open '#{dir.gsub("'", "'\\\\''")}'")
 end
 
 # IFS=$'\n'; for file in $(ruby empty_dirs.rb | head); do xdg-open "$file"; done

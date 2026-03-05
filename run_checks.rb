@@ -53,12 +53,15 @@ def check_photos
   puts "reported #{count} photos to upload"
 end
 
-def check_empty_music_dirs
-  puts "checking for empty music directories"
-  result = `ruby ~/Dropbox/Media/Music/empty_dirs.rb`
-  count = result.lines.length
-  post_count(check_id: 47, count:)
-  puts "reported #{count} empty music directories"
+def check_hard_drive_space
+  puts "checking hard drive space"
+  result = `df -h / --output=avail`
+  available = result.lines[1].strip.to_i
+  goal_amount = 20
+  count = goal_amount - available
+
+  post_count(check_id: 54, count:)
+  puts "reported #{count} GB need to be cleared"
 end
 
 # https://www.fastmail.com/for-developers/integrating-with-fastmail/
@@ -79,5 +82,5 @@ check_downloads
 check_todo_list
 check_pixel_photos
 check_photos
-check_empty_music_dirs
+check_hard_drive_space
 # check_fastmail_inbox
