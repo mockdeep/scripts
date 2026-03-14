@@ -1,11 +1,17 @@
 #!/usr/bin/env ruby
 
+require 'open3'
+
+CHAIN_SUFFIX = /_(\d+)$/
+
+def chain_branches(git_directory: '.')
+  out, = Open3.capture2("git", "-C", git_directory, "branch")
+  out.scan(/^[* ] (.+#{CHAIN_SUFFIX.source})/).map(&:first)
+end
+
 def measure_chains(git_directory: '.')
-  `git -C #{git_directory} branch`
-    .split("\n")
-    .select { |branch| branch =~ /\d$/ }
-    .map { |branch| branch.gsub(/\*/, '').strip }
-    .map { |branch| branch.gsub(/_\d+$/, '') }
+  chain_branches(git_directory: git_directory)
+    .map { |branch| branch.gsub(CHAIN_SUFFIX, '') }
     .tally
     .sort_by(&:last)
 end
