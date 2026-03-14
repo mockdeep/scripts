@@ -180,7 +180,13 @@ module BandcampDL
 
   class Runner
     def call(root_url)
-      Artist.new(root_url).albums.each(&:download)
+      if root_url.include?('/album/') || root_url.include?('/track/')
+        artist_name = URI.parse(root_url).host.split('.').first
+        artist = Struct.new(:name).new(artist_name)
+        Album.new(artist, root_url).download
+      else
+        Artist.new(root_url).albums.each(&:download)
+      end
     end
   end
 end
