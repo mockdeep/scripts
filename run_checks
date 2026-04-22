@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
 which mise && eval "$(mise activate bash)"
-ruby "$HOME/Dropbox/scripts/run_checks.rb"
+ruby "$HOME/Dropbox/projects/scripts/run_checks.rb"

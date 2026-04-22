@@ -1,7 +1,7 @@
 
 [Desktop Entry]
 Type=Application
-Exec=/home/fletch/Dropbox/scripts/conky_start.sh
+Exec=/home/fletch/Dropbox/projects/scripts/conky_start.sh
 Hidden=false
 NoDisplay=false
 X-GNOME-Autostart-enabled=true
