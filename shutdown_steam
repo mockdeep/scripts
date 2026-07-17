@@ -3,6 +3,6 @@
 now=$(date +%H:%M)
 
 echo $now
-if [ "$now" \> "21:00" ]; then
+if [ "$now" \> "22:00" ]; then
   killall steam
 fi
