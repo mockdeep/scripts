@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+require "rexml/document"
+require "fileutils"
+require "uri"
+
+DB = File.expand_path("~/.local/share/rhythmbox/rhythmdb.xml")
+dest = ARGV[0] or abort "usage: copy_starred DEST_DIR"
+FileUtils.mkdir_p(dest)
+
+doc = REXML::Document.new(File.read(DB))
+doc.elements.each("rhythmdb/entry[@type='song']") do |entry|
+  rating = entry.elements["rating"]&.text.to_i
+  next unless rating >= 1
+
+  location = entry.elements["location"].text
+  path = URI.decode_www_form_component(location.sub("file://", ""))
+  unless File.exist?(path)
+    warn "missing: #{path}"
+    next
+  end
+
+  artist = entry.elements["artist"]&.text
+  title = entry.elements["title"]&.text
+  name = "#{artist} - #{title}#{File.extname(path)}".gsub("/", "_")
+  FileUtils.cp(path, File.join(dest, name))
+end
